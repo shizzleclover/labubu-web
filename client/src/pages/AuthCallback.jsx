@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { CheckCircle, AlertCircle, Loader2, ArrowLeft } from "lucide-react"
 import { DotGrid } from "@/components"
+import LabubuLoading from "@/components/LabubuLoading"
 
 export default function AuthCallback() {
   const [searchParams] = useSearchParams()
@@ -47,18 +48,16 @@ export default function AuthCallback() {
   // Processing state
   if (authStatus === 'processing') {
     return (
-      <div className="min-h-screen bg-background relative overflow-hidden">
-        <div className="absolute inset-0 w-full h-full opacity-20">
-          <DotGrid
-            dotSize={5}
-            gap={12}
-            proximity={120}
-            shockRadius={310}
-            shockStrength={5}
-            resistance={750}
-            returnDuration={1.5}
-          />
-        </div>
+      <div className="min-h-screen bg-background relative overflow-hidden flex items-center justify-center">
+        <DotGrid
+          dotSize={5}
+          gap={12}
+          proximity={120}
+          shockRadius={310}
+          shockStrength={5}
+          resistance={750}
+          returnDuration={1.5}
+        />
 
         {/* Floating emoji decorations */}
         <div className="absolute inset-0 opacity-10 pointer-events-none">
@@ -72,17 +71,7 @@ export default function AuthCallback() {
           <div className="max-w-md mx-auto">
             <Card className="labubu-card mobile-card text-center">
               <CardContent className="p-8 sm:p-10">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Loader2 className="h-8 w-8 text-primary animate-spin" />
-                </div>
-                
-                <h1 className="text-2xl sm:text-3xl font-bold text-labubu-heading mb-4">
-                  Signing You In
-                </h1>
-                
-                <p className="text-muted-foreground text-sm sm:text-base">
-                  Processing your {provider} authentication...
-                </p>
+                <LabubuLoading size="large" text={`Processing your ${provider} authentication...`} textColor="hsl(var(--muted-foreground))" />
               </CardContent>
             </Card>
           </div>
@@ -131,7 +120,7 @@ export default function AuthCallback() {
                   You've successfully signed in with {provider}. Redirecting you to your dashboard...
                 </p>
 
-                <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-6" />
+                <LabubuLoading size="small" text="Redirecting..." textColor="hsl(var(--muted-foreground))" />
 
                 <Link to="/dashboard">
                   <Button className="w-full labubu-button mobile-button labubu-gradient">

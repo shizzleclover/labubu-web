@@ -7,10 +7,11 @@ import { Label } from "@/components/ui/label"
 import { Eye, EyeOff, Mail, Lock, ArrowLeft } from "lucide-react"
 import { DotGrid } from "@/components"
 import { useAuthStore } from "@/store/authStore"
+import LabubuLoading from "@/components/LabubuLoading"
 
 export default function Login() {
   const navigate = useNavigate()
-  const { signIn, user } = useAuthStore()
+  const { signIn } = useAuthStore()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -186,8 +187,7 @@ export default function Login() {
                 >
                   {isLoading ? (
                     <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Signing In...
+                      <LabubuLoading size="small" text="Signing In..." textColor="hsl(var(--primary-foreground))" />
                     </div>
                   ) : (
                     "Sign In"

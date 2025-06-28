@@ -141,7 +141,7 @@ export default function Pricing() {
       <section className="pb-12 sm:pb-16 lg:pb-20 px-4">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 max-w-7xl mx-auto">
-            {plans.map((plan, index) => (
+            {plans.map((plan) => (
               <Card 
                 key={plan.name} 
                 className={`labubu-card hover-lift relative overflow-hidden ${

@@ -220,7 +220,7 @@ const Masonry = ({
         scrollAnimationRef.current.kill();
       }
     };
-  }, [grid, imagesReady, enableScrollAnimation]);
+  }, [grid, imagesReady, enableScrollAnimation, containerRef]);
 
   const handleMouseEnter = (id, element) => {
     if (scaleOnHover) {

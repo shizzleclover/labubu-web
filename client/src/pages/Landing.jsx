@@ -74,7 +74,6 @@ export default function Landing() {
 
   // Import content from constants
   const plans = LANDING_CONTENT.pricing.plans;
-  const galleryPreviews = LANDING_CONTENT.galleryPreview.galleries;
   const faqData = LANDING_CONTENT.faq.questions;
 
   // Create Masonry items for Labubu gallery
@@ -327,7 +326,7 @@ export default function Landing() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-6xl mx-auto">
-            {plans.map((plan, index) => (
+            {plans.map((plan) => (
               <Card 
                 key={plan.name} 
                 className={`labubu-card mobile-card hover-lift relative overflow-hidden transition-all duration-300 ${

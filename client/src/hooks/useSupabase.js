@@ -2,43 +2,47 @@
 // This will be implemented when integrating with Supabase
 
 import { useState, useEffect } from 'react'
+import { supabase } from '@/lib/supabase'
 
-export function useSupabase() {
-  const [client, setClient] = useState(null)
-  
+export const useSupabase = () => {
+  const [_client] = useState(supabase)
+  const [session, setSession] = useState(null)
+  const [user, setUser] = useState(null)
+
+  // Auth functions
+  const signUp = async () => {
+    // Implementation here
+  }
+
+  const signIn = async () => {
+    // Implementation here  
+  }
+
   useEffect(() => {
-    // Initialize Supabase client here
-    // setClient(createClient(url, key))
+    // Get initial session
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      setSession(session)
+      setUser(session?.user ?? null)
+    }
+
+    getSession()
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session)
+        setUser(session?.user ?? null)
+      }
+    )
+
+    return () => subscription?.unsubscribe()
   }, [])
 
   return {
-    client,
-    // Auth methods
-    signUp: async (email, password) => {
-      // Implement Supabase signup
-      console.log('Supabase signup:', email)
-    },
-    signIn: async (email, password) => {
-      // Implement Supabase signin
-      console.log('Supabase signin:', email)
-    },
-    signOut: async () => {
-      // Implement Supabase signout
-      console.log('Supabase signout')
-    },
-    
-    // Database methods
-    getUser: async (userId) => {
-      // Implement get user
-      console.log('Get user:', userId)
-    },
-    getUserGallery: async (username) => {
-      // Implement get user gallery
-      console.log('Get gallery:', username)
-    },
-    uploadItem: async (itemData) => {
-      // Implement upload item
-      console.log('Upload item:', itemData)
-    }
+    session,
+    user,
+    signUp,
+    signIn,
   }
 } 

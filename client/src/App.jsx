@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import Navbar from '@/components/Navbar'
 import { MobileDock, Dock } from '@/components'
+import LabubuLoading from '@/components/LabubuLoading'
 import { 
   Home as HomeIcon, 
   Search, 
@@ -105,13 +106,7 @@ function AppContent() {
   if (!isInitialized || isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-labubu flex items-center justify-center text-2xl shadow-labubu mb-4 animate-bounce">
-            🧸
-          </div>
-          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading your collection...</p>
-        </div>
+        <LabubuLoading size="large" text="Loading your collection..." textColor="hsl(var(--muted-foreground))" />
       </div>
     )
   }

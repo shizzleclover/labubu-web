@@ -21,12 +21,12 @@ import {
 import { useAuthStore } from "@/store/authStore"
 import { ThemeToggle } from "@/components/ThemeToggle"
 
-// Better dummy images for masonry layout with rarity system
+// Better dummy images for masonry layout with rarity system - Mobile Optimized Heights
 const sampleGalleryItems = [
   {
     id: 1,
     img: "https://picsum.photos/400/600?random=1",
-    height: 320,
+    height: 180, // Reduced from 320
     title: "Cosmic Labubu Adventure",
     creator: "@space_collector",
     likes: 234,
@@ -39,7 +39,7 @@ const sampleGalleryItems = [
   {
     id: 2,
     img: "https://picsum.photos/400/400?random=2",
-    height: 250,
+    height: 140, // Reduced from 250
     title: "Pink Dreams Labubu",
     creator: "@kawaii_world",
     likes: 456,
@@ -52,7 +52,7 @@ const sampleGalleryItems = [
   {
     id: 3,
     img: "https://picsum.photos/400/700?random=3",
-    height: 400,
+    height: 220, // Reduced from 400
     title: "Midnight Mystery Labubu",
     creator: "@dark_arts",
     likes: 189,
@@ -65,7 +65,7 @@ const sampleGalleryItems = [
   {
     id: 4,
     img: "https://picsum.photos/400/300?random=4",
-    height: 200,
+    height: 120, // Reduced from 200
     title: "Rainbow Bridge Labubu",
     creator: "@colorful_dreams",
     likes: 678,
@@ -78,7 +78,7 @@ const sampleGalleryItems = [
   {
     id: 5,
     img: "https://picsum.photos/400/550?random=5",
-    height: 350,
+    height: 200, // Reduced from 350
     title: "Golden Sunset Labubu",
     creator: "@sunset_vibes",
     likes: 345,
@@ -91,7 +91,7 @@ const sampleGalleryItems = [
   {
     id: 6,
     img: "https://picsum.photos/400/320?random=6",
-    height: 220,
+    height: 160, // Reduced from 220
     title: "Ocean Blue Labubu",
     creator: "@ocean_depths",
     likes: 567,
@@ -104,7 +104,7 @@ const sampleGalleryItems = [
   {
     id: 7,
     img: "https://picsum.photos/400/480?random=7",
-    height: 300,
+    height: 170, // Reduced from 300
     title: "Neon City Labubu",
     creator: "@cyber_punk",
     likes: 234,
@@ -117,7 +117,7 @@ const sampleGalleryItems = [
   {
     id: 8,
     img: "https://picsum.photos/400/380?random=8",
-    height: 280,
+    height: 150, // Reduced from 280
     title: "Forest Spirit Labubu",
     creator: "@nature_spirit",
     likes: 445,
@@ -130,7 +130,7 @@ const sampleGalleryItems = [
   {
     id: 9,
     img: "https://picsum.photos/400/450?random=9",
-    height: 260,
+    height: 140, // Reduced from 260
     title: "Vintage Rose Labubu",
     creator: "@vintage_vibes",
     likes: 298,
@@ -143,7 +143,7 @@ const sampleGalleryItems = [
   {
     id: 10,
     img: "https://picsum.photos/400/650?random=10",
-    height: 380,
+    height: 210, // Reduced from 380
     title: "Crystal Dreams Labubu",
     creator: "@crystal_magic",
     likes: 512,
@@ -156,7 +156,7 @@ const sampleGalleryItems = [
   {
     id: 11,
     img: "https://picsum.photos/400/280?random=11",
-    height: 180,
+    height: 110, // Reduced from 180
     title: "Mini Explorer Labubu",
     creator: "@tiny_world",
     likes: 167,
@@ -169,7 +169,7 @@ const sampleGalleryItems = [
   {
     id: 12,
     img: "https://picsum.photos/400/500?random=12",
-    height: 320,
+    height: 190, // Reduced from 320
     title: "Royal Purple Labubu",
     creator: "@royal_collection",
     likes: 789,
@@ -257,30 +257,62 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header Section with Navbar Elements */}
-      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          {/* Top Row - Logo, Brand, Theme Toggle, User Avatar */}
-          <div className="flex items-center justify-between mb-4">
-            {/* Logo and Brand */}
-            <Link to={user ? "/home" : "/"} className="flex items-center space-x-2 sm:space-x-3 hover:opacity-80 transition-opacity">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-primary to-accent rounded-labubu flex items-center justify-center text-base sm:text-lg">
+      {/* Compact Native App Bar */}
+      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-md border-b border-border">
+        <div className="container mx-auto px-4 py-2">
+          {/* Single Row - Logo, Filters, Upload */}
+          <div className="flex items-center justify-between h-12">
+            {/* Left - Logo and Brand */}
+            <Link to={user ? "/home" : "/"} className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+              <div className="w-6 h-6 bg-gradient-to-br from-primary to-accent rounded-labubu flex items-center justify-center text-sm">
                 🧸
               </div>
-              <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              <span className="text-lg font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 Labubu Showroom
               </span>
             </Link>
 
-            {/* Right Side - Theme Toggle and User Avatar */}
-            <div className="flex items-center space-x-3">
+            {/* Center - Compact Filter Pills */}
+            <div className="flex items-center gap-1">
+              {[
+                { key: "all", label: "All", icon: Grid3X3 },
+                { key: "liked", label: "♥", icon: Heart },
+                { key: "trending", label: "📈", icon: TrendingUp }
+              ].map((filter) => (
+                <Button
+                  key={filter.key}
+                  size="sm"
+                  variant={activeFilter === filter.key ? "default" : "ghost"}
+                  onClick={() => setActiveFilter(filter.key)}
+                  className={`h-8 px-3 text-xs rounded-full transition-all duration-200 ${
+                    activeFilter === filter.key 
+                      ? 'bg-gradient-to-r from-primary to-accent text-white shadow-md' 
+                      : 'hover:bg-muted'
+                  }`}
+                >
+                  {filter.label}
+                </Button>
+              ))}
+            </div>
+
+            {/* Right - Upload, Theme Toggle, User */}
+            <div className="flex items-center space-x-2">
+              <Button
+                size="sm"
+                className="h-8 px-3 text-xs rounded-full bg-gradient-to-r from-primary to-accent text-white shadow-md hover:shadow-lg transition-all duration-200"
+                onClick={() => navigate('/upload')}
+              >
+                <Plus className="w-3 h-3 mr-1" />
+                Upload
+              </Button>
+              
               <ThemeToggle />
               
-              {/* User Avatar Dropdown */}
+              {/* Compact User Avatar */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-labubu hover:scale-105 transition-transform duration-200">
-                    <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-labubu flex items-center justify-center text-sm shadow-labubu">
+                  <Button variant="ghost" className="h-8 w-8 p-0 rounded-full hover:scale-105 transition-transform duration-200">
+                    <div className="w-7 h-7 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-xs shadow-md">
                       🧸
                     </div>
                   </Button>
@@ -306,83 +338,36 @@ export default function Home() {
               </DropdownMenu>
             </div>
           </div>
-
-          {/* Welcome Message */}
-          <div className="mb-4">
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-labubu-heading mb-1">
-              Welcome back, {user?.display_name || user?.username}! 🧸
-            </h1>
-            <p className="text-sm sm:text-base text-muted-foreground">
-              Discover amazing Labubu collections from the community
-            </p>
-          </div>
-
-          {/* Filters and Upload Button */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              {/* Filter Buttons with Slide Animation */}
-              <div className="relative flex p-1 bg-muted rounded-labubu">
-                {/* Animated Background Slider */}
-                <div 
-                  className="absolute top-1 bottom-1 bg-gradient-to-r from-primary to-accent rounded-labubu shadow-labubu transition-all duration-300 ease-out"
-                  style={{
-                    width: 'calc(33.333% - 4px)',
-                    left: `calc(${['all', 'liked', 'trending'].indexOf(activeFilter) * 33.333}% + 2px)`
-                  }}
-                />
-                
-                {[
-                  { key: "all", label: "All", icon: Grid3X3 },
-                  { key: "liked", label: "Liked", icon: Heart },
-                  { key: "trending", label: "Trending", icon: TrendingUp }
-                ].map((filter) => (
-                  <Button
-                    key={filter.key}
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => setActiveFilter(filter.key)}
-                    className={`relative z-10 flex-1 text-xs rounded-labubu transition-colors duration-300 ${
-                      activeFilter === filter.key 
-                        ? 'text-white hover:text-white' 
-                        : 'hover:bg-transparent hover:text-foreground'
-                    }`}
-                  >
-                    <filter.icon className="w-3 h-3 mr-1" />
-                    {filter.label}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            <Button
-              size="sm"
-              className="labubu-button labubu-gradient shadow-labubu hover:shadow-lg transition-all duration-200"
-              onClick={() => navigate('/upload')}
-            >
-              <Plus className="w-4 h-4 mr-1" />
-              Upload
-            </Button>
-          </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-6">
+      {/* Main Content with Welcome Message Moved Here */}
+      <div className="container mx-auto px-3 sm:px-4 pt-3 sm:pt-4 pb-6">
+        {/* Compact Welcome Section */}
+        <div className="mb-3 sm:mb-4">
+          <h2 className="text-base sm:text-lg font-semibold text-foreground mb-1">
+            Welcome back, {user?.display_name || user?.username}! 🧸
+          </h2>
+          <p className="text-xs sm:text-sm text-muted-foreground">
+            {filteredItems.length} collection{filteredItems.length !== 1 ? 's' : ''} • Discover amazing Labubu items
+          </p>
+        </div>
+
         {/* Stats Bar for Mobile */}
-        <div className="sm:hidden mb-6">
+        <div className="sm:hidden mb-3">
           <Card className="labubu-card mobile-card">
-            <CardContent className="p-4">
-              <div className="grid grid-cols-3 gap-4 text-center">
+            <CardContent className="p-2.5">
+              <div className="grid grid-cols-3 gap-3 text-center">
                 <div>
-                  <p className="text-lg font-bold">{userStats?.totalItems || 0}</p>
+                  <p className="text-sm font-bold">{userStats?.totalItems || 0}</p>
                   <p className="text-xs text-muted-foreground">Items</p>
                 </div>
                 <div>
-                  <p className="text-lg font-bold">{userStats?.totalFollowers || 0}</p>
+                  <p className="text-sm font-bold">{userStats?.totalFollowers || 0}</p>
                   <p className="text-xs text-muted-foreground">Followers</p>
                 </div>
                 <div>
-                  <p className="text-lg font-bold">{(userStats?.totalViews || 0).toLocaleString()}</p>
+                  <p className="text-sm font-bold">{(userStats?.totalViews || 0).toLocaleString()}</p>
                   <p className="text-xs text-muted-foreground">Views</p>
                 </div>
               </div>
@@ -390,22 +375,15 @@ export default function Home() {
           </Card>
         </div>
 
-        {/* Results Count */}
-        <div className="mb-4">
-          <p className="text-sm text-muted-foreground">
-            Showing {filteredItems.length} collection{filteredItems.length !== 1 ? 's' : ''}
-          </p>
-        </div>
-
-        {/* Pinterest-Style Masonry Grid */}
-        <div className="pb-24 sm:pb-8">
-          <div className="columns-2 sm:columns-3 lg:columns-4 gap-4 space-y-4">
+        {/* Pinterest-Style Masonry Grid - Mobile Optimized */}
+        <div className="pb-20 sm:pb-8">
+          <div className="columns-2 sm:columns-3 lg:columns-4 gap-2 sm:gap-4 space-y-2 sm:space-y-4">
             {filteredItems.map((item) => {
               const rarityStyles = getRarityStyles(item.rarity)
               return (
                 <div 
                   key={item.id} 
-                  className="break-inside-avoid mb-4"
+                  className="break-inside-avoid mb-2 sm:mb-4"
                 >
                   <Card 
                     className={`group overflow-hidden labubu-card hover:shadow-xl transition-all duration-300 bg-card/50 backdrop-blur-sm cursor-pointer relative ${rarityStyles.border} ${rarityStyles.glow}`}
@@ -419,8 +397,8 @@ export default function Home() {
                         style={{ height: `${item.height}px` }}
                       />
                       
-                      {/* Overlay with actions */}
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      {/* Overlay with actions - Hidden on mobile for better performance */}
+                      <div className="hidden sm:flex absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-center justify-center">
                         <div className="flex gap-2">
                           <Button
                             size="sm"
@@ -453,24 +431,24 @@ export default function Home() {
                       </div>
 
                       {/* Rarity badge */}
-                      <Badge className={`absolute top-2 left-2 text-xs rounded-labubu shadow-labubu ${rarityStyles.badge}`}>
+                      <Badge className={`absolute top-1.5 left-1.5 text-xs rounded-labubu shadow-labubu ${rarityStyles.badge}`}>
                         {item.rarity}
                       </Badge>
                     </div>
 
-                    <CardContent className="p-3 sm:p-4">
-                      <h3 className="font-semibold text-sm sm:text-base text-labubu-heading mb-1 line-clamp-1">
+                    <CardContent className="p-2 sm:p-3">
+                      <h3 className="font-semibold text-xs sm:text-sm text-labubu-heading mb-1 line-clamp-1">
                         {item.title}
                       </h3>
-                      <p className="text-xs sm:text-sm text-muted-foreground mb-2">
+                      <p className="text-xs text-muted-foreground mb-1 sm:mb-2">
                         {item.creator}
                       </p>
-                      <div className="text-xs text-muted-foreground mb-2">
+                      <div className="text-xs text-muted-foreground mb-1 sm:mb-2 opacity-80">
                         {item.series}
                       </div>
                       
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                        <div className="flex items-center gap-2 sm:gap-3 text-xs text-muted-foreground">
                           <div className="flex items-center gap-1">
                             <Heart className="w-3 h-3" />
                             <span>{item.likes}</span>
@@ -480,6 +458,18 @@ export default function Home() {
                             <span>{item.views}k</span>
                           </div>
                         </div>
+                        {/* Mobile-only like button */}
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="sm:hidden p-1 h-6 w-6 hover:bg-muted rounded-full"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleLike(item.id)
+                          }}
+                        >
+                          <Heart className={`w-3 h-3 ${item.isLiked ? 'fill-red-500 text-red-500' : ''}`} />
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -489,8 +479,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-
     </div>
   )
 } 

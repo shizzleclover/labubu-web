@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { CheckCircle, AlertCircle, Mail, ArrowLeft, Loader2 } from "lucide-react"
 import { DotGrid } from "@/components"
+import LabubuLoading from "@/components/LabubuLoading"
 
 export default function VerifyEmail() {
   const [searchParams] = useSearchParams()
@@ -53,34 +54,29 @@ export default function VerifyEmail() {
   // Verifying state
   if (verificationStatus === 'verifying') {
     return (
-      <div className="min-h-screen bg-background relative overflow-hidden">
-        <div className="absolute inset-0 w-full h-full opacity-20">
-          <DotGrid
-            dotSize={5}
-            gap={12}
-            proximity={120}
-            shockRadius={310}
-            shockStrength={5}
-            resistance={750}
-            returnDuration={1.5}
-          />
+      <div className="min-h-screen bg-background relative overflow-hidden flex items-center justify-center">
+        <DotGrid
+          dotSize={5}
+          gap={12}
+          proximity={120}
+          shockRadius={310}
+          shockStrength={5}
+          resistance={750}
+          returnDuration={1.5}
+        />
+
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <div className="absolute top-20 left-10 text-4xl animate-float">🧸</div>
+          <div className="absolute top-40 right-20 text-3xl animate-float-delayed">✨</div>
+          <div className="absolute bottom-32 left-20 text-3xl animate-float">🎀</div>
+          <div className="absolute bottom-20 right-10 text-4xl animate-float-delayed">🌸</div>
         </div>
 
         <div className="container mx-auto px-4 py-8 sm:py-12 lg:py-16 relative z-10">
           <div className="max-w-md mx-auto">
             <Card className="labubu-card mobile-card text-center">
               <CardContent className="p-8 sm:p-10">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Loader2 className="h-8 w-8 text-primary animate-spin" />
-                </div>
-                
-                <h1 className="text-2xl sm:text-3xl font-bold text-labubu-heading mb-4">
-                  Verifying Email
-                </h1>
-                
-                <p className="text-muted-foreground text-sm sm:text-base">
-                  Please wait while we verify your email address...
-                </p>
+                <LabubuLoading size="large" text="Please wait while we verify your email address..." textColor="hsl(var(--muted-foreground))" />
               </CardContent>
             </Card>
           </div>
@@ -211,16 +207,12 @@ export default function VerifyEmail() {
                 >
                   {isResending ? (
                     <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Sending...
+                      <LabubuLoading size="small" text="Sending..." textColor="hsl(var(--primary-foreground))" />
                     </div>
-                  ) : resendCooldown > 0 ? (
-                    `Resend in ${resendCooldown}s`
                   ) : (
-                    <>
-                      <Mail className="w-4 h-4 mr-2" />
-                      Resend Verification
-                    </>
+                    resendCooldown > 0 
+                      ? `Resend Email (${resendCooldown}s)` 
+                      : "Resend Verification Email"
                   )}
                 </Button>
                 

@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import LabubuLoading from "@/components/LabubuLoading"
 import { 
   Edit, 
-  Settings, 
+  Settings as SettingsIcon, 
   Share2, 
   Heart, 
   Eye, 
@@ -18,7 +19,6 @@ import {
   Grid3X3,
   BarChart3
 } from "lucide-react"
-import { useAuthStore } from "@/store/authStore"
 
 const mockUserData = {
   id: 1,
@@ -74,13 +74,15 @@ const mockUserData = {
 
 export default function Profile() {
   const navigate = useNavigate()
-  const { user } = useAuthStore()
-  const [userData] = useState(mockUserData)
   const [activeTab, setActiveTab] = useState("grid")
   const [isLoading, setIsLoading] = useState(true)
+  const [userData] = useState(mockUserData)
 
   useEffect(() => {
-    setTimeout(() => setIsLoading(false), 1000)
+    // Simulate loading delay
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 1000)
   }, [])
 
   const formatDate = (dateString) => {
@@ -100,13 +102,7 @@ export default function Profile() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-labubu flex items-center justify-center text-2xl shadow-labubu mb-4 animate-bounce">
-            🧸
-          </div>
-          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading profile...</p>
-        </div>
+        <LabubuLoading size="large" text="Loading profile..." textColor="hsl(var(--muted-foreground))" />
       </div>
     )
   }
@@ -156,7 +152,7 @@ export default function Profile() {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-2 lg:ml-auto w-full lg:w-auto">
               <Button variant="outline" onClick={() => navigate('/settings')}>
-                <Settings className="w-4 h-4 mr-2" />
+                <SettingsIcon className="w-4 h-4 mr-2" />
                 Settings
               </Button>
               <Button variant="outline">

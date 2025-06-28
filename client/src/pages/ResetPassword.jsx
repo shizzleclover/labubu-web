@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Mail, ArrowLeft, CheckCircle } from "lucide-react"
 import { DotGrid } from "@/components"
 import { useAuthStore } from "@/store/authStore"
+import LabubuLoading from "@/components/LabubuLoading"
 
 export default function ResetPassword() {
   const { resetPassword } = useAuthStore()
@@ -210,8 +211,7 @@ export default function ResetPassword() {
                 >
                   {isLoading ? (
                     <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Sending Reset Link...
+                      <LabubuLoading size="small" text="Sending Reset Link..." textColor="hsl(var(--primary-foreground))" />
                     </div>
                   ) : (
                     "Send Reset Link"

@@ -19,6 +19,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import LabubuLoading from "@/components/LabubuLoading"
 
 const RARITY_OPTIONS = [
   { value: "Common", label: "Common", color: "bg-gray-500" },
@@ -114,6 +115,7 @@ export default function Upload() {
       // Navigate to home after successful upload
       navigate('/home')
     } catch (error) {
+      console.error('Upload failed:', error)
       setErrors({ submit: "Failed to upload. Please try again." })
     } finally {
       setIsUploading(false)
@@ -166,10 +168,7 @@ export default function Upload() {
               size="lg"
             >
               {isUploading ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                  Uploading...
-                </>
+                <LabubuLoading size="small" text="Uploading..." textColor="hsl(var(--primary-foreground))" />
               ) : (
                 <>
                   <Save className="w-4 h-4 mr-2" />
@@ -199,7 +198,7 @@ export default function Upload() {
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => navigate('/home')}>
                 <Eye className="w-4 h-4 mr-2" />
-                Preview
+                View Gallery
               </Button>
               <Button 
                 form="upload-form" 
@@ -208,10 +207,7 @@ export default function Upload() {
                 className="labubu-gradient"
               >
                 {isUploading ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                    Uploading...
-                  </>
+                  <LabubuLoading size="small" text="Uploading..." textColor="hsl(var(--primary-foreground))" />
                 ) : (
                   <>
                     <Save className="w-4 h-4 mr-2" />
@@ -225,124 +221,106 @@ export default function Upload() {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-4 sm:py-8 pb-24 sm:pb-8">
-        <form id="upload-form" onSubmit={handleSubmit} className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
-            
-            {/* Left Side - Images */}
-            <div className="space-y-4 sm:space-y-6">
-              <Card className="labubu-card">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Camera className="w-5 h-5" />
-                    Photos
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {/* Upload Area */}
-                  <div
-                    className="border-2 border-dashed border-muted-foreground/25 rounded-labubu p-6 sm:p-8 text-center hover:border-primary/50 transition-colors cursor-pointer active:border-primary active:bg-primary/5"
-                    onDragOver={handleDragOver}
-                    onDrop={handleDrop}
-                    onClick={() => document.getElementById('image-upload').click()}
-                  >
-                    <input
-                      id="image-upload"
-                      type="file"
-                      multiple
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                    />
-                    <div className="space-y-3">
-                      <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-primary to-accent rounded-labubu flex items-center justify-center text-2xl mx-auto">
-                        <UploadIcon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm sm:text-base">Click to upload or drag & drop</p>
-                        <p className="text-xs sm:text-sm text-muted-foreground">PNG, JPG up to 10MB each</p>
-                      </div>
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto">
+          <form onSubmit={handleSubmit} id="upload-form" className="space-y-8">
+            {/* Image Upload Section */}
+            <Card className="labubu-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Camera className="w-5 h-5" />
+                  Item Images
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div
+                  className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-border rounded-labubu text-muted-foreground cursor-pointer hover:border-primary transition-colors"
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                  onClick={() => document.getElementById('image-upload').click()}
+                >
+                  <UploadIcon className="w-8 h-8 mb-3" />
+                  <p className="text-sm font-medium mb-1">Drag & drop images here, or click to browse</p>
+                  <p className="text-xs">Max 10MB per image, up to 5 images</p>
+                  <input
+                    id="image-upload"
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageUpload}
+                  />
+                </div>
+                {errors.images && (
+                  <p className="text-xs text-destructive text-center">{errors.images}</p>
+                )}
+                
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                  {images.map(image => (
+                    <div key={image.id} className="relative group rounded-labubu overflow-hidden shadow-sm aspect-w-1 aspect-h-1 w-full">
+                      <img src={image.preview} alt={image.name} className="w-full h-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(image.id)}
+                        className="absolute top-2 right-2 bg-background/50 backdrop-blur-sm rounded-full p-1 text-foreground hover:bg-destructive hover:text-destructive-foreground transition-colors opacity-0 group-hover:opacity-100"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
                     </div>
-                  </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
 
-                  {/* Image Preview Grid */}
-                  {images.length > 0 && (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-                      {images.map((image) => (
-                        <div key={image.id} className="relative group">
-                          <img
-                            src={image.preview}
-                            alt={image.name}
-                            className="w-full aspect-square object-cover rounded-labubu"
-                          />
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="sm"
-                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 sm:opacity-0 opacity-100 transition-opacity w-8 h-8 p-0 shadow-lg"
-                            onClick={() => removeImage(image.id)}
-                          >
-                            <X className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {errors.images && (
-                    <p className="text-sm text-destructive">{errors.images}</p>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Right Side - Details */}
-            <div className="space-y-4 sm:space-y-6">
-              <Card className="labubu-card">
-                <CardHeader>
-                  <CardTitle>Item Details</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4 sm:space-y-5">
-                  {/* Name */}
+            {/* Item Details Section */}
+            <Card className="labubu-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Save className="w-5 h-5" />
+                  Item Details
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Name *</Label>
+                    <Label htmlFor="name">Item Name *</Label>
                     <Input
                       id="name"
+                      placeholder="e.g., Space Traveler Labubu"
                       value={formData.name}
                       onChange={(e) => handleInputChange("name", e.target.value)}
-                      placeholder="e.g., Cosmic Labubu Adventure"
-                      className={errors.name ? "border-destructive" : ""}
+                      className={`${errors.name ? 'border-destructive' : ''}`}
                     />
                     {errors.name && (
-                      <p className="text-sm text-destructive">{errors.name}</p>
+                      <p className="text-xs text-destructive">{errors.name}</p>
                     )}
                   </div>
-
-                  {/* Character */}
                   <div className="space-y-2">
                     <Label htmlFor="character">Character</Label>
                     <Input
                       id="character"
                       value={formData.character}
                       onChange={(e) => handleInputChange("character", e.target.value)}
-                      placeholder="Labubu"
+                      disabled // Labubu is fixed for now
                     />
                   </div>
+                </div>
 
-                  {/* Series */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="series">Series *</Label>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="w-full justify-start">
-                          {formData.series || "Select series..."}
+                        <Button variant="outline" className="w-full justify-between">
+                          {formData.series || "Select a series"}
+                          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-full">
-                        {SERIES_OPTIONS.map((series) => (
-                          <DropdownMenuItem
-                            key={series}
-                            onClick={() => handleInputChange("series", series)}
+                      <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)]">
+                        {SERIES_OPTIONS.map(series => (
+                          <DropdownMenuItem 
+                            key={series} 
+                            onSelect={() => handleInputChange("series", series)}
                           >
                             {series}
                           </DropdownMenuItem>
@@ -350,101 +328,68 @@ export default function Upload() {
                       </DropdownMenuContent>
                     </DropdownMenu>
                     {errors.series && (
-                      <p className="text-sm text-destructive">{errors.series}</p>
+                      <p className="text-xs text-destructive">{errors.series}</p>
                     )}
                   </div>
-
-                  {/* Rarity */}
                   <div className="space-y-2">
-                    <Label>Rarity</Label>
-                    <div className="grid grid-cols-2 gap-2 sm:gap-3">
-                      {RARITY_OPTIONS.map((option) => (
-                        <Button
-                          key={option.value}
-                          type="button"
-                          variant={formData.rarity === option.value ? "default" : "outline"}
-                          onClick={() => handleInputChange("rarity", option.value)}
-                          className="justify-start h-10 sm:h-9 text-sm"
-                        >
-                          <div className={`w-3 h-3 rounded-full ${option.color} mr-2`} />
-                          {option.label}
+                    <Label htmlFor="rarity">Rarity</Label>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="w-full justify-between flex items-center">
+                          <Badge className={`${getRarityColor(formData.rarity)} mr-2`}>{formData.rarity}</Badge>
+                          {formData.rarity}
+                          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
-                      ))}
-                    </div>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)]">
+                        {RARITY_OPTIONS.map(option => (
+                          <DropdownMenuItem 
+                            key={option.value} 
+                            onSelect={() => handleInputChange("rarity", option.value)}
+                            className="flex items-center"
+                          >
+                            <Badge className={`${option.color} mr-2`}>{option.label}</Badge>
+                            {option.label}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
+                </div>
 
-                  {/* Description */}
-                  <div className="space-y-2">
-                    <Label htmlFor="description">Description *</Label>
-                    <textarea
-                      id="description"
-                      value={formData.description}
-                      onChange={(e) => handleInputChange("description", e.target.value)}
-                      placeholder="Tell the story of this Labubu..."
-                      rows={4}
-                      className={`w-full rounded-labubu border border-input bg-background px-3 py-3 sm:py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none ${errors.description ? "border-destructive" : ""}`}
-                    />
-                    {errors.description && (
-                      <p className="text-sm text-destructive">{errors.description}</p>
-                    )}
-                  </div>
-
-                  {/* Visibility */}
-                  <div className="space-y-2">
-                    <Label>Visibility</Label>
-                    <div className="flex gap-2 sm:gap-3">
-                      <Button
-                        type="button"
-                        variant={formData.isPublic ? "default" : "outline"}
-                        onClick={() => handleInputChange("isPublic", true)}
-                        className="flex-1 h-10 sm:h-9 text-sm"
-                      >
-                        Public
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={!formData.isPublic ? "default" : "outline"}
-                        onClick={() => handleInputChange("isPublic", false)}
-                        className="flex-1 h-10 sm:h-9 text-sm"
-                      >
-                        Private
-                      </Button>
-                    </div>
-                  </div>
-
-                  {errors.submit && (
-                    <p className="text-sm text-destructive">{errors.submit}</p>
+                <div className="space-y-2">
+                  <Label htmlFor="description">Description *</Label>
+                  <textarea
+                    id="description"
+                    placeholder="Tell us more about your Labubu, its story, special features..."
+                    value={formData.description}
+                    onChange={(e) => handleInputChange("description", e.target.value)}
+                    rows={5}
+                    className={`flex h-24 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${errors.description ? 'border-destructive' : ''}`}
+                  />
+                  {errors.description && (
+                    <p className="text-xs text-destructive">{errors.description}</p>
                   )}
-                </CardContent>
-              </Card>
+                </div>
 
-              {/* Preview Card */}
-              {formData.name && images.length > 0 && (
-                <Card className="labubu-card">
-                  <CardHeader>
-                    <CardTitle>Preview</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="relative">
-                      <img
-                        src={images[0].preview}
-                        alt={formData.name}
-                        className="w-full aspect-square object-cover rounded-labubu"
-                      />
-                      <Badge className={`absolute top-2 right-2 ${getRarityColor(formData.rarity)} text-white`}>
-                        {formData.rarity}
-                      </Badge>
-                    </div>
-                    <div className="mt-3">
-                      <h3 className="font-semibold">{formData.name}</h3>
-                      <p className="text-sm text-muted-foreground">{formData.series}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-          </div>
-        </form>
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="public-mode"
+                    checked={formData.isPublic}
+                    onCheckedChange={(checked) => handleInputChange("isPublic", checked)}
+                  />
+                  <Label htmlFor="public-mode">Make this item public</Label>
+                </div>
+              </CardContent>
+            </Card>
+
+            {errors.submit && (
+              <div className="text-sm text-destructive text-center p-3 bg-destructive/10 rounded-labubu border border-destructive/20">
+                {errors.submit}
+              </div>
+            )}
+          </form>
+        </div>
       </div>
     </div>
   )

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Link, useSearchParams, useNavigate } from "react-router-dom"
+import { Link, useSearchParams } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -7,23 +7,20 @@ import { Label } from "@/components/ui/label"
 import { Eye, EyeOff, Lock, ArrowLeft, CheckCircle, AlertCircle } from "lucide-react"
 import { DotGrid } from "@/components"
 import { useAuthStore } from "@/store/authStore"
+import LabubuLoading from "@/components/LabubuLoading"
 
 export default function UpdatePassword() {
-  const [searchParams] = useSearchParams()
-  const navigate = useNavigate()
   const { updatePassword } = useAuthStore()
-  const [formData, setFormData] = useState({
-    password: "",
-    confirmPassword: ""
-  })
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
   const [errors, setErrors] = useState({})
+  const [success, setSuccess] = useState(false)
   const [isValidToken, setIsValidToken] = useState(null)
 
-  const token = searchParams.get('token')
+  const token = useSearchParams().get('token')
 
   useEffect(() => {
     // Validate token on component mount
@@ -39,7 +36,11 @@ export default function UpdatePassword() {
   }, [token])
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
+    if (field === "password") {
+      setPassword(value)
+    } else if (field === "confirmPassword") {
+      setConfirmPassword(value)
+    }
     // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: "" }))
@@ -49,15 +50,15 @@ export default function UpdatePassword() {
   const validateForm = () => {
     const newErrors = {}
     
-    if (!formData.password) {
+    if (!password) {
       newErrors.password = "Password is required"
-    } else if (formData.password.length < 8) {
+    } else if (password.length < 8) {
       newErrors.password = "Password must be at least 8 characters"
     }
 
-    if (!formData.confirmPassword) {
+    if (!confirmPassword) {
       newErrors.confirmPassword = "Please confirm your password"
-    } else if (formData.password !== formData.confirmPassword) {
+    } else if (password !== confirmPassword) {
       newErrors.confirmPassword = "Passwords don't match"
     }
 
@@ -77,9 +78,9 @@ export default function UpdatePassword() {
     }
 
     try {
-      const result = await updatePassword(formData.password)
+      const result = await updatePassword(password)
       if (result.success) {
-        setIsSuccess(true)
+        setSuccess(true)
       }
     } catch (error) {
       setErrors({ submit: error.message || "Failed to update password. Please try again." })
@@ -145,7 +146,7 @@ export default function UpdatePassword() {
   }
 
   // Success state
-  if (isSuccess) {
+  if (success) {
     return (
       <div className="min-h-screen bg-background relative overflow-hidden">
         <div className="absolute inset-0 w-full h-full opacity-20">
@@ -193,10 +194,7 @@ export default function UpdatePassword() {
   if (isValidToken === null) {
     return (
       <div className="min-h-screen bg-background relative overflow-hidden flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">Validating reset link...</p>
-        </div>
+        <LabubuLoading size="large" text="Validating reset link..." textColor="hsl(var(--muted-foreground))" />
       </div>
     )
   }
@@ -274,7 +272,7 @@ export default function UpdatePassword() {
                       id="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter new password"
-                      value={formData.password}
+                      value={password}
                       onChange={(e) => handleInputChange("password", e.target.value)}
                       className={`pl-10 pr-10 labubu-button ${errors.password ? 'border-destructive' : ''}`}
                       disabled={isLoading}
@@ -304,7 +302,7 @@ export default function UpdatePassword() {
                       id="confirmPassword"
                       type={showConfirmPassword ? "text" : "password"}
                       placeholder="Confirm new password"
-                      value={formData.confirmPassword}
+                      value={confirmPassword}
                       onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
                       className={`pl-10 pr-10 labubu-button ${errors.confirmPassword ? 'border-destructive' : ''}`}
                       disabled={isLoading}
@@ -358,4 +356,4 @@ export default function UpdatePassword() {
       </div>
     </div>
   )
-} 
+}

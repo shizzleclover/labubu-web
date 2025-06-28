@@ -26,10 +26,10 @@ const useAuthStore = create(
 
           if (session?.user) {
             // Get user profile from database
-            const { data: profile, error: profileError } = await dbHelpers.getUserProfile(session.user.id)
+            const { data: profile, error: _profileError } = await dbHelpers.getUserProfile(session.user.id)
             
-            if (profileError && profileError.code !== 'PGRST116') { // PGRST116 = no rows returned
-              console.error('Profile error:', profileError)
+            if (_profileError && _profileError.code !== 'PGRST116') { // PGRST116 = no rows returned
+              console.error('Profile error:', _profileError)
             }
 
             set({
@@ -109,13 +109,13 @@ const useAuthStore = create(
               profile_completed: false
             }
             
-            const { data: profile, error: profileError } = await dbHelpers.createUserProfile(
+            const { data: _profile, error: _profileError } = await dbHelpers.createUserProfile(
               data.user.id,
               profileData
             )
 
-            if (profileError) {
-              console.error('Profile creation error:', profileError)
+            if (_profileError) {
+              console.error('Profile creation error:', _profileError)
               // Don't throw here, user can complete profile later
             }
 

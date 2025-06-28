@@ -12,7 +12,7 @@ const ThemeContext = createContext({
   resolvedTheme: 'light',
 });
 
-export const useTheme = () => {
+const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
     throw new Error('useTheme must be used within a ThemeProvider');
@@ -20,7 +20,7 @@ export const useTheme = () => {
   return context;
 };
 
-export const ThemeProvider = ({ children }) => {
+const ThemeProvider = ({ children }) => {
   const [theme, setThemeState] = useState('system');
   const [resolvedTheme, setResolvedTheme] = useState('light');
 
@@ -59,4 +59,6 @@ export const ThemeProvider = ({ children }) => {
       {children}
     </ThemeContext.Provider>
   );
-}; 
+};
+
+export { ThemeProvider, useTheme }; 

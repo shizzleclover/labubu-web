@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Eye, EyeOff, Mail, Lock, User, ArrowLeft } from "lucide-react"
 import { DotGrid } from "@/components"
 import { useAuthStore } from "@/store/authStore"
+import LabubuLoading from "@/components/LabubuLoading"
 
 export default function Register() {
   const navigate = useNavigate()
@@ -284,8 +285,7 @@ export default function Register() {
                 >
                   {isLoading ? (
                     <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Creating Account...
+                      <LabubuLoading size="small" text="Creating Account..." textColor="hsl(var(--primary-foreground))" />
                     </div>
                   ) : (
                     "Create Account"

@@ -26,6 +26,7 @@ import {
 import { DotGrid } from "@/components"
 import { useAuthStore } from "@/store/authStore"
 import { useTheme } from "@/hooks/useTheme"
+import LabubuLoading from "@/components/LabubuLoading"
 
 export default function ProfileSetup() {
   const navigate = useNavigate()
@@ -573,17 +574,17 @@ export default function ProfileSetup() {
                   </Button>
                 ) : (
                   <Button
+                    type="button"
                     onClick={handleSubmit}
                     disabled={isLoading}
-                    className="labubu-button labubu-gradient"
+                    className="w-full labubu-button mobile-button labubu-gradient hover:opacity-90 text-base"
                   >
                     {isLoading ? (
                       <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        Creating Profile...
+                        <LabubuLoading size="small" text="Creating Profile..." textColor="hsl(var(--primary-foreground))" />
                       </div>
                     ) : (
-                      "Complete Setup"
+                      "Complete Profile"
                     )}
                   </Button>
                 )}

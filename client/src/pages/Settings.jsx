@@ -37,50 +37,34 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useAuthStore } from "@/store/authStore"
 import { useTheme } from "@/hooks/useTheme"
+import LabubuLoading from "@/components/LabubuLoading"
 
 export default function Settings() {
   const navigate = useNavigate()
-  const { user, signOut } = useAuthStore()
   const { theme, setTheme } = useTheme()
+  const { signOut } = useAuthStore()
   
   const [settings, setSettings] = useState({
-    // Account Settings
-    email: user?.email || "sarah@example.com",
-    username: user?.username || "labubu_collector",
-    
-    // Privacy Settings
-    profilePublic: true,
-    showEmail: false,
-    allowSearch: true,
-    showActivity: true,
-    
-    // Notification Settings
-    emailNotifications: true,
-    pushNotifications: true,
-    likeNotifications: true,
-    followNotifications: true,
-    commentNotifications: true,
-    marketingEmails: false,
-    
-    // Display Settings
-    theme: theme || "system",
-    showSensitive: false
-  })
-  
-  // Subscription state (mock data - replace with real API calls)
-  const [subscriptionData, setSubscriptionData] = useState({
-    plan: user?.is_pro ? "pro" : "free",
-    status: "active",
-    itemsUsed: 3,
-    itemsLimit: user?.is_pro ? null : 5,
-    nextBillingDate: user?.is_pro ? "2024-02-15" : null,
-    monthlyPrice: 25,
-    features: {
-      free: ["Up to 5 Labubu items", "Basic gallery", "Public profiles"],
-      pro: ["Unlimited Labubu items", "Advanced analytics", "Priority support", "Custom themes", "Export data"]
+    theme: theme,
+    username: "collector123",
+    email: "user@example.com",
+    privacy_level: "public",
+    notifications: {
+      likes: true,
+      comments: true,
+      follows: true,
+      marketing: false
     }
   })
   
+  const [subscriptionData, setSubscriptionData] = useState({
+    plan: "free",
+    status: "active",
+    itemsLimit: 10,
+    nextBillingDate: null
+  })
+  
+  const [_isLoading, _setIsLoading] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [isSubscriptionLoading, setIsSubscriptionLoading] = useState(false)
   const [errors, setErrors] = useState({})
@@ -95,6 +79,7 @@ export default function Settings() {
   const handleSave = async () => {
     setIsSaving(true)
     try {
+      setIsLoading(true)
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000))
       
@@ -104,10 +89,11 @@ export default function Settings() {
       }
       
       console.log("Settings saved successfully")
-    } catch (error) {
-      setErrors({ submit: "Failed to save settings" })
+    } catch (_error) {
+      console.error('Failed to save settings')
     } finally {
       setIsSaving(false)
+      setIsLoading(false)
     }
   }
 
@@ -120,9 +106,17 @@ export default function Settings() {
     }
   }
 
-  const handleDeleteAccount = () => {
+  const handleDeleteAccount = async () => {
     if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
       console.log("Account deletion requested")
+          try {
+      // Simulate account deletion
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      console.log('Account deleted')
+      navigate('/')
+    } catch (_error) {
+      console.error('Failed to delete account')
+    }
     }
   }
 
@@ -144,7 +138,7 @@ export default function Settings() {
       }))
       
       console.log("Upgraded to Pro successfully")
-    } catch (error) {
+    } catch (_error) {
       setErrors({ subscription: "Failed to upgrade subscription" })
     } finally {
       setIsSubscriptionLoading(false)
@@ -167,7 +161,7 @@ export default function Settings() {
       }))
       
       console.log("Subscription cancelled successfully")
-    } catch (error) {
+    } catch (_error) {
       setErrors({ subscription: "Failed to cancel subscription" })
     } finally {
       setIsSubscriptionLoading(false)
@@ -188,6 +182,17 @@ export default function Settings() {
         return <Moon className="w-4 h-4" />
       default:
         return <Monitor className="w-4 h-4" />
+    }
+  }
+
+  const _handleChangePassword = async () => {
+    try {
+      // Simulate password change
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      setPasswordData({ current: '', new: '', confirm: '' })
+      console.log('Password changed successfully')
+    } catch (_error) {
+      console.error('Failed to change password')
     }
   }
 
@@ -218,10 +223,7 @@ export default function Settings() {
               className="labubu-gradient"
             >
               {isSaving ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                  Saving...
-                </>
+                <LabubuLoading size="small" text="Saving..." textColor="hsl(var(--primary-foreground))" />
               ) : (
                 <>
                   <Save className="w-4 h-4 mr-2" />
@@ -391,19 +393,16 @@ export default function Settings() {
               <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t">
                 {subscriptionData.plan === "free" ? (
                   <Button 
+                    className="labubu-gradient w-full"
                     onClick={handleUpgradeToPro}
-                    disabled={isSubscriptionLoading}
-                    className="labubu-gradient flex-1"
+                    disabled={isSubscriptionLoading || subscriptionData.plan === 'pro'}
                   >
                     {isSubscriptionLoading ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                        Upgrading...
-                      </>
+                      <LabubuLoading size="small" text="Upgrading..." textColor="hsl(var(--primary-foreground))" />
                     ) : (
                       <>
                         <Crown className="w-4 h-4 mr-2" />
-                        Upgrade to Pro - ${subscriptionData.monthlyPrice}/month
+                        Upgrade to Pro
                       </>
                     )}
                   </Button>
@@ -427,16 +426,13 @@ export default function Settings() {
                     </Button>
                     {subscriptionData.status !== "cancelled" && (
                       <Button
-                        variant="destructive"
+                        variant="outline"
+                        className="w-full"
                         onClick={handleCancelSubscription}
-                        disabled={isSubscriptionLoading}
-                        className="flex-1"
+                        disabled={isSubscriptionLoading || subscriptionData.status === 'cancelled'}
                       >
                         {isSubscriptionLoading ? (
-                          <>
-                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                            Cancelling...
-                          </>
+                          <LabubuLoading size="small" text="Cancelling..." textColor="hsl(var(--muted-foreground))" />
                         ) : (
                           <>
                             <X className="w-4 h-4 mr-2" />

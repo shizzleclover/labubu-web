@@ -3,6 +3,10 @@ import { useParams, useNavigate, Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useAuthStore } from "@/store/authStore"
 import { 
   Heart, 
   Eye, 
@@ -11,7 +15,8 @@ import {
   Download,
   MoreHorizontal,
   ArrowLeft,
-  ExternalLink
+  ExternalLink,
+  MessageCircle
 } from "lucide-react"
 import {
   DropdownMenu,
@@ -19,6 +24,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import LabubuLoading from "@/components/LabubuLoading"
 
 // Sample data - this would typically come from an API
 const sampleGalleryItems = [
@@ -87,8 +93,14 @@ const sampleGalleryItems = [
 export default function ItemDetails() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuthStore()
   const [item, setItem] = useState(null)
   const [relatedItems, setRelatedItems] = useState([])
+  const [comments, setComments] = useState([
+    { id: 1, user: { username: "@art_lover", avatar: "https://github.com/shadcn.png" }, text: "This Labubu is amazing!", timestamp: "2 days ago" },
+    { id: 2, user: { username: "@toy_collector", avatar: "https://github.com/shadcn.png" }, text: "Love the colors!", timestamp: "1 day ago" },
+  ])
+  const [newComment, setNewComment] = useState("")
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -119,6 +131,25 @@ export default function ItemDetails() {
     }
   }
 
+  const handleSubmitComment = () => {
+    if (newComment.trim() !== '') {
+      const newId = comments.length > 0 ? Math.max(...comments.map(c => c.id)) + 1 : 1;
+      setComments(prev => [
+        ...prev,
+        {
+          id: newId,
+          user: { 
+            username: user?.username || "Guest", 
+            avatar: user?.avatar_url || "https://github.com/shadcn.png" 
+          }, 
+          text: newComment.trim(),
+          timestamp: "Just now",
+        },
+      ]);
+      setNewComment("");
+    }
+  };
+
   const getRarityStyles = (rarity) => {
     switch (rarity) {
       case 'Legendary':
@@ -143,13 +174,7 @@ export default function ItemDetails() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-labubu flex items-center justify-center text-2xl shadow-labubu mb-4 animate-bounce">
-            🧸
-          </div>
-          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading item details...</p>
-        </div>
+        <LabubuLoading size="large" text="Loading item details..." textColor="hsl(var(--muted-foreground))" />
       </div>
     )
   }
@@ -253,16 +278,13 @@ export default function ItemDetails() {
               </div>
               <div className="flex-1">
                 <Link 
-                  to={`/gallery/${item.creator.replace('@', '')}`}
-                  className="font-semibold text-base hover:text-primary transition-colors"
+                  to={`/profile/${item.creator.replace('@', '')}`}
+                  className="font-semibold hover:underline"
                 >
                   {item.creator}
                 </Link>
-                <p className="text-xs text-muted-foreground">Creator</p>
+                <p className="text-sm text-muted-foreground">Original Creator</p>
               </div>
-              <Button variant="outline" size="sm">
-                Follow
-              </Button>
             </div>
 
             {/* Title and Rarity */}
@@ -274,9 +296,26 @@ export default function ItemDetails() {
             </div>
 
             {/* Description */}
-            <p className="text-muted-foreground leading-relaxed text-lg">
-              {item.description}
-            </p>
+            <div className="space-y-2">
+              <h2 className="text-xl font-bold">Description</h2>
+              <p className="text-muted-foreground leading-relaxed text-sm">
+                {item.description}
+              </p>
+            </div>
+
+            {/* Tags */}
+            {item.tags && item.tags.length > 0 && (
+              <div className="space-y-2">
+                <h2 className="text-xl font-bold">Tags</h2>
+                <div className="flex flex-wrap gap-2">
+                  {item.tags.map(tag => (
+                    <Badge key={tag} variant="secondary" className="rounded-full px-3 py-1 text-xs">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Stats */}
             <div className="flex items-center gap-4 p-3 bg-muted rounded-labubu">
@@ -316,6 +355,51 @@ export default function ItemDetails() {
               <div>
                 <p className="font-medium mb-1">Rarity</p>
                 <p className="text-muted-foreground">{item.rarity}</p>
+              </div>
+            </div>
+
+            {/* Comments Section */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-bold">Comments ({comments.length})</h2>
+              {/* Comment Input */}
+              <div className="flex items-start space-x-2">
+                <Avatar className="w-8 h-8">
+                  <AvatarImage src={user?.avatar_url || "https://github.com/shadcn.png"} alt={user?.username || "Guest"} />
+                  <AvatarFallback>{user?.username ? user.username.substring(0, 2).toUpperCase() : "GU"}</AvatarFallback>
+                </Avatar>
+                <div className="flex-grow space-y-2">
+                  <Textarea
+                    placeholder="Write a comment..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    className="min-h-[60px] rounded-labubu resize-y"
+                  />
+                  <Button
+                    onClick={handleSubmitComment}
+                    className="rounded-labubu bg-gradient-to-r from-primary to-accent hover:opacity-90 shadow-labubu transition-all duration-200 text-sm"
+                    disabled={!newComment.trim()}
+                  >
+                    Post Comment
+                  </Button>
+                </div>
+              </div>
+              {/* Existing Comments */}
+              <div className="space-y-4 pt-4">
+                {comments.map(comment => (
+                  <div key={comment.id} className="flex items-start space-x-3">
+                    <Avatar className="w-8 h-8">
+                      <AvatarImage src={comment.user.avatar} alt={comment.user.username} />
+                      <AvatarFallback>{comment.user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-grow">
+                      <div className="flex items-center space-x-2 text-sm">
+                        <span className="font-semibold">{comment.user.username}</span>
+                        <span className="text-muted-foreground">• {comment.timestamp}</span>
+                      </div>
+                      <p className="text-foreground mt-1 text-sm">{comment.text}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
