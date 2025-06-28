@@ -206,10 +206,10 @@ export default function Landing() {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
             <Button asChild className="labubu-button labubu-gradient shadow-labubu hover:shadow-lg transition-all duration-200 text-base py-3 px-6 h-auto sm:px-8">
-              <a href={LANDING_CONTENT.hero.ctaButtons[0].link}>{LANDING_CONTENT.hero.ctaButtons[0].text}</a>
+              <a href="/register">{LANDING_CONTENT.hero.primaryButton}</a>
             </Button>
             <Button asChild variant="outline" className="labubu-button rounded-labubu shadow-sm hover:shadow-md transition-all duration-200 text-base py-3 px-6 h-auto sm:px-8">
-              <a href={LANDING_CONTENT.hero.ctaButtons[1].link}>{LANDING_CONTENT.hero.ctaButtons[1].text}</a>
+              <a href="/explore">{LANDING_CONTENT.hero.secondaryButton}</a>
             </Button>
           </div>
         </div>
