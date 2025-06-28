@@ -1,0 +1,264 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Labubu Showroom Light Mode - Solarized Inspired */
+    --background: 44 87% 94%; /* #fdf6e3 */
+    --foreground: 192 100% 11%; /* #073642 */
+    --card: 44 9% 86%; /* #eee8d5 */
+    --card-foreground: 192 100% 11%; /* #073642 */
+    --popover: 44 9% 86%; /* #eee8d5 */
+    --popover-foreground: 192 100% 11%; /* #073642 */
+    --primary: 331 74% 49%; /* #d33682 */
+    --primary-foreground: 0 0% 100%; /* #ffffff */
+    --secondary: 175 60% 39%; /* #2aa198 */
+    --secondary-foreground: 0 0% 100%; /* #ffffff */
+    --muted: 194 14% 60%; /* #93a1a1 */
+    --muted-foreground: 192 100% 11%; /* #073642 */
+    --accent: 18 89% 45%; /* #cb4b16 */
+    --accent-foreground: 0 0% 100%; /* #ffffff */
+    --destructive: 1 79% 52%; /* #dc322f */
+    --destructive-foreground: 0 0% 100%; /* #ffffff */
+    --border: 194 25% 55%; /* #839496 */
+    --input: 194 25% 55%; /* #839496 */
+    --ring: 331 74% 49%; /* #d33682 */
+    --radius: 1.4rem;
+    --chart-1: 205 98% 39%; /* #268bd2 */
+    --chart-2: 175 60% 39%; /* #2aa198 */
+    --chart-3: 331 74% 49%; /* #d33682 */
+    --chart-4: 18 89% 45%; /* #cb4b16 */
+    --chart-5: 1 79% 52%; /* #dc322f */
+    
+    /* Sidebar specific tokens */
+    --sidebar-background: 44 87% 94%; /* #fdf6e3 */
+    --sidebar-foreground: 192 100% 11%; /* #073642 */
+    --sidebar-primary: 331 74% 49%; /* #d33682 */
+    --sidebar-primary-foreground: 0 0% 100%; /* #ffffff */
+    --sidebar-accent: 175 60% 39%; /* #2aa198 */
+    --sidebar-accent-foreground: 0 0% 100%; /* #ffffff */
+    --sidebar-border: 194 25% 55%; /* #839496 */
+    --sidebar-ring: 331 74% 49%; /* #d33682 */
+  }
+
+  .dark {
+    /* Labubu Showroom Dark Mode - Custom Purple Theme */
+    --background: 225 7% 11%; /* #1a1b1e */
+    --foreground: 0 0% 94%; /* #f0f0f0 */
+    --card: 220 7% 14%; /* #222327 */
+    --card-foreground: 0 0% 94%; /* #f0f0f0 */
+    --popover: 220 7% 14%; /* #222327 */
+    --popover-foreground: 0 0% 94%; /* #f0f0f0 */
+    --primary: 255 74% 67%; /* #8c5cff */
+    --primary-foreground: 0 0% 100%; /* #ffffff */
+    --secondary: 220 10% 18%; /* #2a2c33 */
+    --secondary-foreground: 0 0% 94%; /* #f0f0f0 */
+    --muted: 220 10% 18%; /* #2a2c33 */
+    --muted-foreground: 0 0% 63%; /* #a0a0a0 */
+    --accent: 215 25% 27%; /* #1e293b */
+    --accent-foreground: 210 100% 74%; /* #79c0ff */
+    --destructive: 0 77% 70%; /* #f87171 */
+    --destructive-foreground: 0 0% 100%; /* #ffffff */
+    --border: 216 9% 20%; /* #33353a */
+    --input: 216 9% 20%; /* #33353a */
+    --ring: 255 74% 67%; /* #8c5cff */
+    --radius: 1.4rem;
+    --chart-1: 142 76% 73%; /* #4ade80 */
+    --chart-2: 255 74% 67%; /* #8c5cff */
+    --chart-3: 0 93% 81%; /* #fca5a5 */
+    --chart-4: 213 93% 68%; /* #5993f4 */
+    --chart-5: 0 0% 63%; /* #a0a0a0 */
+    
+    /* Sidebar specific tokens */
+    --sidebar-background: 225 8% 9%; /* #161618 */
+    --sidebar-foreground: 0 0% 94%; /* #f0f0f0 */
+    --sidebar-primary: 255 74% 67%; /* #8c5cff */
+    --sidebar-primary-foreground: 0 0% 100%; /* #ffffff */
+    --sidebar-accent: 220 10% 18%; /* #2a2c33 */
+    --sidebar-accent-foreground: 255 74% 67%; /* #8c5cff */
+    --sidebar-border: 216 9% 20%; /* #33353a */
+    --sidebar-ring: 255 74% 67%; /* #8c5cff */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground transition-colors duration-300 font-sans tracking-tight;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans tracking-tight;
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Custom focus styles */
+  .focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+  
+  /* Mobile optimizations */
+  @media (max-width: 640px) {
+    .container {
+      @apply px-4;
+    }
+    
+    /* Better touch targets for mobile */
+    button, a {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    
+    /* Prevent zoom on inputs on iOS */
+    input, select, textarea {
+      font-size: 16px;
+    }
+  }
+}
+
+@layer utilities {
+  /* Dark mode utilities */
+  .theme-transition {
+    @apply transition-colors duration-300 ease-in-out;
+  }
+  
+  .dark-mode-aware {
+    @apply theme-transition;
+  }
+  
+  /* Labubu Design System Utilities */
+  .labubu-gradient {
+    @apply bg-gradient-to-r from-primary to-accent;
+  }
+  
+  .labubu-gradient-text {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+  
+  .labubu-shadow {
+    box-shadow: 0px 2px 3px 0px hsl(0 0% 0% / 0.16);
+  }
+  
+  .labubu-card {
+    @apply bg-card border border-border rounded-labubu shadow-labubu p-6;
+  }
+  
+  .labubu-button {
+    @apply rounded-labubu shadow-labubu hover:shadow-lg transition-all duration-200;
+  }
+  
+  .labubu-button-hover {
+    @apply hover:bg-accent/10 hover:text-accent-foreground transition-all duration-200;
+  }
+  
+  .labubu-glass {
+    @apply bg-background/80 backdrop-blur-sm border border-border/50;
+  }
+  
+  /* Improved scrollbar for dark mode */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/20 rounded-labubu;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/30;
+  }
+  
+  /* Interactive elements */
+  .hover-lift {
+    @apply hover:scale-105 transition-transform duration-200;
+  }
+  
+  .hover-glow {
+    @apply hover:shadow-[0_0_20px_rgba(140,92,255,0.3)] transition-shadow duration-300;
+  }
+  
+  /* Typography helpers */
+  .text-labubu-heading {
+    @apply font-sans font-bold tracking-tight;
+  }
+  
+  .text-labubu-body {
+    @apply font-sans tracking-tight;
+  }
+  
+  /* Mobile-friendly utilities */
+  .mobile-safe-area {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  
+  .mobile-container {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+  
+  .mobile-text {
+    @apply text-sm sm:text-base lg:text-lg;
+  }
+  
+  .mobile-heading {
+    @apply text-xl sm:text-2xl lg:text-3xl;
+  }
+  
+  .mobile-button {
+    @apply py-3 px-4 text-base min-h-[44px] w-full sm:w-auto;
+  }
+  
+  /* Enhanced card spacing for mobile */
+  .mobile-card {
+    @apply p-4 sm:p-6;
+  }
+  
+  /* Floating animations */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-float-delayed {
+    animation: float 6s ease-in-out infinite 3s;
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

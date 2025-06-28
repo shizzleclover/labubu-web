@@ -1,0 +1,136 @@
+{
+    "name": "Labubu Showroom Design System",
+    "version": "1.0.0",
+    "description": "Design tokens and theming for Labubu Showroom, supporting light and dark modes.",
+    "modes": {
+      "light": {
+        "primary": {
+          "base": "#d33682",
+          "foreground": "#ffffff"
+        },
+        "secondary": {
+          "base": "#2aa198",
+          "foreground": "#ffffff"
+        },
+        "accent": {
+          "base": "#cb4b16",
+          "foreground": "#ffffff"
+        },
+        "base": {
+          "background": "#fdf6e3",
+          "foreground": "#073642"
+        },
+        "card": {
+          "background": "#eee8d5",
+          "foreground": "#073642"
+        },
+        "popover": {
+          "background": "#eee8d5",
+          "foreground": "#073642"
+        },
+        "muted": {
+          "base": "#93a1a1",
+          "foreground": "#073642"
+        },
+        "destructive": {
+          "base": "#dc322f",
+          "foreground": "#ffffff"
+        },
+        "border": "#839496",
+        "input": "#839496",
+        "ring": "#d33682",
+        "chart": {
+          "chart1": "#268bd2",
+          "chart2": "#2aa198",
+          "chart3": "#d33682",
+          "chart4": "#cb4b16",
+          "chart5": "#dc322f"
+        },
+        "sidebar": {
+          "background": "#fdf6e3",
+          "foreground": "#073642",
+          "primary": "#d33682",
+          "primaryForeground": "#ffffff",
+          "accent": "#2aa198",
+          "accentForeground": "#ffffff",
+          "border": "#839496",
+          "ring": "#d33682"
+        }
+      },
+      "dark": {
+        "primary": {
+          "base": "#8c5cff",
+          "foreground": "#ffffff"
+        },
+        "secondary": {
+          "base": "#2a2c33",
+          "foreground": "#f0f0f0"
+        },
+        "accent": {
+          "base": "#1e293b",
+          "foreground": "#79c0ff"
+        },
+        "base": {
+          "background": "#1a1b1e",
+          "foreground": "#f0f0f0"
+        },
+        "card": {
+          "background": "#222327",
+          "foreground": "#f0f0f0"
+        },
+        "popover": {
+          "background": "#222327",
+          "foreground": "#f0f0f0"
+        },
+        "muted": {
+          "base": "#2a2c33",
+          "foreground": "#a0a0a0"
+        },
+        "destructive": {
+          "base": "#f87171",
+          "foreground": "#ffffff"
+        },
+        "border": "#33353a",
+        "input": "#33353a",
+        "ring": "#8c5cff",
+        "chart": {
+          "chart1": "#4ade80",
+          "chart2": "#8c5cff",
+          "chart3": "#fca5a5",
+          "chart4": "#5993f4",
+          "chart5": "#a0a0a0"
+        },
+        "sidebar": {
+          "background": "#161618",
+          "foreground": "#f0f0f0",
+          "primary": "#8c5cff",
+          "primaryForeground": "#ffffff",
+          "accent": "#2a2c33",
+          "accentForeground": "#8c5cff",
+          "border": "#33353a",
+          "ring": "#8c5cff"
+        }
+      }
+    },
+    "typography": {
+      "fontFamily": {
+        "sans": "Plus Jakarta Sans",
+        "serif": "Lora",
+        "mono": "IBM Plex Mono"
+      },
+      "letterSpacing": "-0.025em"
+    },
+    "effects": {
+      "radius": "1.4rem",
+      "spacing": "0.27rem",
+      "shadow": {
+        "color": "hsl(0 0% 0%)",
+        "opacity": 0.16,
+        "blur": "3px",
+        "spread": "0px",
+        "offsetX": "0px",
+        "offsetY": "2px"
+      }
+    }
+  }
+  
